@@ -1,0 +1,87 @@
+esphome:
+  name: soilmeter
+
+esp32:
+  board: featheresp32-s2
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "ForbodulonPrime"
+  password: "awg33zrick"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Soil Meter Fallback Hotspot"
+    password: "lDWq8xVGQXIq"
+
+captive_portal:
+
+font:
+  - file: "gfonts://Roboto"
+    id: my_font
+    size: 20
+
+light:
+  - platform: neopixelbus
+    type: GRB
+    variant: WS2811
+    pin: GPIO33
+    num_leds: 1
+    name: "Soil Neopixel"
+    
+status_led:
+  pin:
+    number: GPIO13
+    inverted: false
+    
+i2c:
+  sda: GPIO3
+  scl: GPIO4
+  frequency: 400kHz
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x32"
+    address: 0x3C
+    lambda: |-
+      it.print(0, 0, id(my_font), "Hello World!");
+      
+sensor:
+  - platform: adc
+    pin: A5
+    name: "Basil Moisture"
+    update_interval: 30s
+    unit_of_measurement: "%"
+    attenuation: 11db
+    filters:
+    - median:
+        window_size: 7
+        send_every: 4
+        send_first_at: 1
+    - calibrate_linear:
+        - 1.25 -> 100.00
+        - 2.8 -> 0.00
+    - lambda: |
+        if (x < 0) return 0; 
+        else return (x);
+        
+# else if (x > 100) return 100;
+
+switch:
+  - platform: gpio
+    name: "Basil Relay"
+    pin: 
+      number: GPIO5
+      inverted: true
+      

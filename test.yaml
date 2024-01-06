@@ -1,0 +1,29 @@
+esphome:
+  name: testbed
+
+esp32:
+  board: featheresp32-s2
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "ForbodulonPrime"
+  password: "awg33zrick"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Testbed Fallback Hotspot"
+    password: "6zXgeEyH0Adw"
+
+captive_portal:
+    
