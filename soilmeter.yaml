@@ -26,11 +26,7 @@ wifi:
     password: "lDWq8xVGQXIq"
 
 captive_portal:
-
-font:
-  - file: "gfonts://Roboto"
-    id: my_font
-    size: 20
+  
 
 light:
   - platform: neopixelbus
@@ -50,38 +46,134 @@ i2c:
   scl: GPIO4
   frequency: 400kHz
 
-display:
-  - platform: ssd1306_i2c
-    model: "SSD1306 128x32"
-    address: 0x3C
-    lambda: |-
-      it.print(0, 0, id(my_font), "Hello World!");
-      
+# font:
+#   - file: "gfonts://Roboto"
+#     id: my_font
+#     size: 20
+
+# display:
+#   - platform: ssd1306_i2c
+#     model: "SSD1306 128x32"
+#     address: 0x3C
+#     rotation: 180
+#     lambda: |-
+#       it.print(0, 0, id(my_font), "Bye Booboos!");
+
+ads1115:
+  - address: 0x48
+
 sensor:
-  - platform: adc
-    pin: A5
+  - platform: ads1115
+    multiplexer: 'A0_GND'
     name: "Basil Moisture"
-    update_interval: 30s
+    gain: 4.096
+    update_interval: 60s
     unit_of_measurement: "%"
-    attenuation: 11db
     filters:
     - median:
         window_size: 7
         send_every: 4
         send_first_at: 1
     - calibrate_linear:
-        - 1.25 -> 100.00
-        - 2.8 -> 0.00
+        - 0.9 -> 100.00
+        - 2.5 -> 0.00
     - lambda: |
         if (x < 0) return 0; 
         else return (x);
-        
-# else if (x > 100) return 100;
+  
+  - platform: ads1115
+    multiplexer: 'A1_GND'
+    name: "Jade Moisture"
+    gain: 4.096
+    update_interval: 60s
+    unit_of_measurement: "%"
+    filters:
+    - median:
+        window_size: 7
+        send_every: 4
+        send_first_at: 1
+    - calibrate_linear:
+        - 0.9 -> 100.00
+        - 2.5 -> 0.00
+    - lambda: |
+        if (x < 0) return 0; 
+        else return (x);
+  
+  - platform: ads1115
+    multiplexer: 'A2_GND'
+    name: "Spare 1 Moisture"
+    gain: 4.096
+    update_interval: 3000s
+    unit_of_measurement: "%"
+    filters:
+    - median:
+        window_size: 7
+        send_every: 4
+        send_first_at: 1
+    - calibrate_linear:
+        - 0.9 -> 100.00
+        - 2.5 -> 0.00
+    - lambda: |
+        if (x < 0) return 0; 
+        else return (x);
+  
+  - platform: ads1115
+    multiplexer: 'A3_GND'
+    name: "Spare 2 Moisture"
+    gain: 4.096
+    update_interval: 3000s
+    unit_of_measurement: "%"
+    filters:
+    - median:
+        window_size: 7
+        send_every: 4
+        send_first_at: 1
+    - calibrate_linear:
+        - 0.9 -> 100.00
+        - 2.5 -> 0.00
+    - lambda: |
+        if (x < 0) return 0; 
+        else return (x);
 
+  
 switch:
   - platform: gpio
     name: "Basil Relay"
     pin: 
-      number: GPIO5
+      number: GPIO18
       inverted: true
-      
+  - platform: gpio
+    name: "Jade Relay"
+    pin: 
+      number: GPIO17
+      inverted: true
+  - platform: gpio
+    name: "Spare 1"
+    pin: 
+      number: GPIO16
+      inverted: true
+  - platform: gpio
+    name: "Spare 2"
+    pin: 
+      number: GPIO15
+      inverted: true
+
+
+  # - platform: adc
+  #   pin: A5
+  #   name: "Basil Moisture"
+  #   update_interval: 30s
+  #   unit_of_measurement: "%"
+  #   attenuation: 11db
+  #   filters:
+  #   - median:
+  #       window_size: 7
+  #       send_every: 4
+  #       send_first_at: 1
+  #   - calibrate_linear:
+  #       - 1.25 -> 100.00
+  #       - 2.8 -> 0.00
+  #   - lambda: |
+  #       if (x < 0) return 0; 
+  #       else if (x > 100) return 100;
+  #       else return (x);

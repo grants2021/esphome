@@ -27,3 +27,9 @@ wifi:
 
 captive_portal:
     
+switch:
+  - platform: gpio
+    name: "Test Relay"
+    pin: 
+      number: GPIO18
+      inverted: true
