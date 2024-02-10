@@ -19,6 +19,10 @@ ota:
 wifi:
   ssid: "ForbodulonPrime"
   password: "awg33zrick"
+  manual_ip:
+    static_ip: 192.168.1.150
+    gateway: 192.168.1.254
+    subnet: 255.255.255.0
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
@@ -27,6 +31,9 @@ wifi:
 
 captive_portal:
   
+# external_components:
+#   - source: github://pr#5805
+#     components: [ htu31d ]
 
 light:
   - platform: neopixelbus
@@ -66,7 +73,7 @@ sensor:
   - platform: ads1115
     multiplexer: 'A0_GND'
     name: "Basil Moisture"
-    gain: 4.096
+    gain: 6.144
     update_interval: 60s
     unit_of_measurement: "%"
     filters:
@@ -76,7 +83,7 @@ sensor:
         send_first_at: 1
     - calibrate_linear:
         - 0.9 -> 100.00
-        - 2.5 -> 0.00
+        - 2.048 -> 0.00
     - lambda: |
         if (x < 0) return 0; 
         else return (x);
@@ -84,7 +91,7 @@ sensor:
   - platform: ads1115
     multiplexer: 'A1_GND'
     name: "Jade Moisture"
-    gain: 4.096
+    gain: 6.144
     update_interval: 60s
     unit_of_measurement: "%"
     filters:
@@ -94,7 +101,7 @@ sensor:
         send_first_at: 1
     - calibrate_linear:
         - 0.9 -> 100.00
-        - 2.5 -> 0.00
+        - 2.048 -> 0.00
     - lambda: |
         if (x < 0) return 0; 
         else return (x);
@@ -102,7 +109,7 @@ sensor:
   - platform: ads1115
     multiplexer: 'A2_GND'
     name: "Spare 1 Moisture"
-    gain: 4.096
+    gain: 2.048
     update_interval: 3000s
     unit_of_measurement: "%"
     filters:
@@ -112,7 +119,7 @@ sensor:
         send_first_at: 1
     - calibrate_linear:
         - 0.9 -> 100.00
-        - 2.5 -> 0.00
+        - 2.048 -> 0.00
     - lambda: |
         if (x < 0) return 0; 
         else return (x);
@@ -120,7 +127,7 @@ sensor:
   - platform: ads1115
     multiplexer: 'A3_GND'
     name: "Spare 2 Moisture"
-    gain: 4.096
+    gain: 2.048
     update_interval: 3000s
     unit_of_measurement: "%"
     filters:
@@ -130,11 +137,30 @@ sensor:
         send_first_at: 1
     - calibrate_linear:
         - 0.9 -> 100.00
-        - 2.5 -> 0.00
+        - 2.048 -> 0.00
     - lambda: |
         if (x < 0) return 0; 
         else return (x);
 
+  # - platform: htu31d
+  #   temperature:
+  #     name: "Temperature"
+  #     #update_interval: 60s
+  #     filters:
+  #     - median:
+  #         window_size: 7
+  #         send_every: 4
+  #         send_first_at: 1
+  #     - lambda: return x * (9.0/5.0) + 32.0;
+  #     unit_of_measurement: "°F"
+  #   humidity:
+  #     name: "Humidity"
+  #     #update_interval: 60s
+  #     filters:
+  #     - median:
+  #         window_size: 7
+  #         send_every: 4
+  #         send_first_at: 1
   
 switch:
   - platform: gpio

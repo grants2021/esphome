@@ -1,0 +1,62 @@
+esphome:
+  name: bedroom
+
+esp32:
+  board: adafruit_qtpy_esp32s2
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "ForbodulonPrime"
+  password: "awg33zrick"
+  manual_ip:
+    static_ip: 192.168.1.151
+    gateway: 192.168.1.254
+    subnet: 255.255.255.0
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Bedroom Fallback Hotspot"
+    password: "KLsH2g1LOTgN"
+
+captive_portal:
+    
+external_components:
+  - source: github://pr#5805
+    components: [ htu31d ]
+
+i2c:
+  sda: GPIO41
+  scl: GPIO40
+  frequency: 400kHz
+
+sensor:
+  - platform: htu31d
+    temperature:
+      name: "Temperature"
+      #update_interval: 60s
+      filters:
+      - median:
+          window_size: 7
+          send_every: 4
+          send_first_at: 1
+      - lambda: return x * (9.0/5.0) + 32.0;
+      unit_of_measurement: "°F"
+    humidity:
+      name: "Humidity"
+      #update_interval: 60s
+      filters:
+      - median:
+          window_size: 7
+          send_every: 4
+          send_first_at: 1
